@@ -1,30 +1,24 @@
-package com.netease.yanxuan.teddy.core.util;
+package utils;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
-import com.alibaba.fastjson.JSON;
-import com.netease.yanxuan.teddy.core.exception.ServiceException;
-import org.apache.commons.lang.StringUtils;
-
+/**
+ * 处理容器List的工具方法
+ */
 public class ListUtil {
 
     /**
-     * 将集合对象转成ArrayList
-     * @author youzhihao
+     * 将源list分页
+     * @param list
+     * @param pageSize
+     * @param <T>
+     * @return
      */
-    public static <E> ArrayList<E> toArrayList(Collection<E> collection) {
-        ArrayList<E> list = new ArrayList<E>();
-        for (E item : collection) {
-            list.add(item);
-        }
-        return list;
-    }
-
     public static <T> List<List<T>> splitList(List<T> list, int pageSize) {
         int listSize = list.size();
         int page = (listSize + (pageSize-1))/ pageSize;
-        List<List<T>> listArray = new ArrayList<List<T>>();
+        List<List<T>> listArray = new ArrayList<>();
         for(int i=0;i<page;i++) {
             List<T> subList = new ArrayList<T>();
             for(int j=0;j<listSize;j++) {
@@ -41,7 +35,13 @@ public class ListUtil {
         return listArray;
     }
 
-
+    /**
+     * rawData - toRemoveData
+     * @param rawData
+     * @param toRemoveData
+     * @param <T>
+     * @return
+     */
     public static<T> Set<T> diffSet(List<T> rawData, List<T> toRemoveData){
         Set<T> rawDataSet = new HashSet<>(rawData);
         Set<T> toRemoveDataSet = new HashSet<>(toRemoveData);
@@ -50,52 +50,15 @@ public class ListUtil {
     }
 
 
+    /**
+     * list 去重
+     * @param datas
+     * @param <T>
+     * @return
+     */
     public static <T> List<T> removeDuplicate(List<T> datas){
-        Set<T> rawDataSet = new HashSet<>();
-        List<T> newData = new ArrayList<>();
-        for(T data: datas){
-            if(rawDataSet.contains(data)){
-                continue;
-            }else {
-                newData.add(data);
-                rawDataSet.add(data);
-            }
-        }
-        return newData;
+        return new ArrayList<>(new HashSet<>(datas));
     }
-
-
-    public static<T> List<T> retainSame(List<T> rawData, List<T> toRetainData){
-        if(rawData.size() == toRetainData.size()){
-            return rawData;
-        }
-        Set<T> rawDataSet = new HashSet<>(rawData);
-        Set<T> toRemoveDataSet = new HashSet<>(toRetainData);
-        rawDataSet.retainAll(toRemoveDataSet);
-        List<T> newData = new ArrayList<>();
-        for(T data : rawData){
-            if(rawDataSet.contains(data)){
-                newData.add(data);
-            }
-        }
-        return newData;
-    }
-
-
-
-    public static<T> Set<T> getRepeatSet(List<T> datas){
-        Set<T> skuIdSet = new HashSet();
-        Set<T> skuIdRepeatSet = new HashSet();
-        for(T data: datas){
-            if(skuIdSet.contains(data)){
-                skuIdRepeatSet.add(data);
-            }else {
-                skuIdSet.add(data);
-            }
-        }
-        return skuIdRepeatSet;
-    }
-
 
     /**
      * 从 originList 抽取出 字段fieldName 的非重复List
@@ -118,7 +81,7 @@ public class ListUtil {
                 result.add(value);
             }
         } catch (Exception e){
-            throw new ServiceException("ListUtil.extractOneField 反射异常", e);
+            // do something
         }
         return new ArrayList<>(result);
     }

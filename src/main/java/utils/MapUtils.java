@@ -4,11 +4,8 @@
  * Copyright 2016 Netease, Inc. All rights reserved.
  * NETEASE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
-package com.netease.yanxuan.teddy.core.util;
+package utils;
 
-import com.netease.yanxuan.teddy.core.exception.ServiceException;
-import com.netease.yanxuan.teddy.core.thirdparty.bi.domain.BiOutCapacity;
-import com.netease.yanxuan.teddy.remote.domain.dto.outCapacity.BoardOutstoreGeneralDTO;
 import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.Field;
@@ -20,40 +17,9 @@ import java.util.*;
  */
 public class MapUtils {
 
-    /**
-     * key&value格式的http应答转换为map
-     * 
-     * @param data
-     *            应答数据
-     * @return
-     */
-    public static Map<String, String> dataToMap(String data) {
-
-        Map<String, String> map = new HashMap<>();
-
-        if (StringUtils.isNotBlank(data)) {
-            String[] pairs = data.split("&");
-            if (pairs != null && pairs.length > 0) {
-                List<String> pairsList = Arrays.asList(pairs);
-                for (String pair: pairsList) {
-                    String[] units = pair.split("=");
-                    if (pairs == null || pairs.length == 0) {
-                        continue;
-                    }
-                    // 没有value
-                    if (units.length == 1) {
-                        map.put(units[0], "");
-                    } else {
-                        map.put(units[0], units[1]);
-                    }
-                }
-            }
-        }
-        return map;
-    }
 
     /**
-     * 针对
+     * 将 k,v 放入 map 中
      * 
      * @param map
      * @param key
@@ -139,7 +105,7 @@ public class MapUtils {
                     putIfAbsent(result, key, origin);
                 }
             }catch (Exception e){
-                throw new ServiceException("MapUtils.extractByDeclaredField 反射异常", e);
+                // do something
             }
         }
         return result;
